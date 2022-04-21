@@ -1,0 +1,95 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+def versionProps = new Properties()
+def versionPropsFile = rootProject.file('buildData/version.properties')
+if (versionPropsFile.exists()) {
+    versionProps.load(new FileInputStream(versionPropsFile))
+}
+
+def keystoreProps = new Properties()
+def keystorePropsFile = rootProject.file('buildData/keystore.properties')
+if (keystorePropsFile.exists()) {
+    keystoreProps.load(new FileInputStream(keystorePropsFile))
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        applicationId "com.rosan.xposed.mishare"
+        minSdk 26
+        targetSdk 32
+        versionCode Integer.parseInt(versionProps['versionCode'])
+        versionName versionProps['versionName']
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias keystoreProps['keyAlias']
+            keyPassword keystoreProps['keyPassword']
+            storeFile keystoreProps['storeFile'] ? file(keystoreProps['storeFile']) : null
+            storePassword keystoreProps['storePassword']
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+        release {
+            keyAlias keystoreProps['keyAlias']
+            storePassword keystoreProps['storePassword']
+            keyPassword keystoreProps['keyPassword']
+            storeFile keystoreProps['storeFile'] ? file(keystoreProps['storeFile']) : null
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:+'
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'com.google.android.material:material:+'
+    testImplementation 'junit:junit:+'
+    androidTestImplementation 'androidx.test.ext:junit:+'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:+'
+
+    // MiShare SDK
+    // compileOnly files('libs/com.miui.mishare.connectivity-11008.jar')
+
+    // ManifestEditor
+//    compileOnly project(':ManifestEditor')
+
+    // MiLink SDK
+    compileOnly files("libs/milink-sdk-11008.jar")
+
+    // XposedBridge
+    compileOnly 'de.robv.android.xposed:api:+'
+}

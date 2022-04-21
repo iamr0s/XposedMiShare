@@ -1,0 +1,139 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Gradle Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "temurin"
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Clone Keystore Module
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: |
+          git clone "https://${GITHUB_TOKEN}@github.com/iamr0s/XposedMiShareBuildData.git" ./buildData
+
+      - name: Previous Build
+        run: |
+          chmod +x ./gradlew
+
+      - name: Build Debug Apk(s)
+        id: build_debug
+        run: |
+          ./gradlew assembleDebug --stacktrace
+          echo "::set-output name=package_path::$(readlink -f app/build/outputs/apk/debug/app-debug.apk)"
+
+      - name: Build Release Apk(s)
+        id: build_release
+        run: |
+          ./gradlew assembleRelease --stacktrace
+          echo "::set-output name=package_path::$(readlink -f app/build/outputs/apk/release/app-release.apk)"
+
+      - name: Make Magisk Module
+        id: make_module
+        run: |
+          rootDir=`readlink -f ./`
+          workbenchDir=$rootDir/workbench
+          rm -rf $workbenchDir/cache
+          mkdir $workbenchDir/cache
+
+          # 反编译
+          java -jar $workbenchDir/apktool.jar d -f $workbenchDir/MiShare.apk -o $workbenchDir/cache/MiShare
+
+          # 适配 https://github.com/reiryuki/Miui-Core-Magisk-Module
+          mv $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml.bak
+          sed -r 's/(<application.*?>)/\1\n<uses-library android:name="com.miui.system" android:required="false" \/>\n<uses-library android:name="com.miui.core" android:required="false" \/>\n<uses-library android:name="com.miui.rom" android:required="false" \/>\n<uses-library android:name="miuiframework" android:required="false" \/>\n/g' $workbenchDir/cache/MiShare/AndroidManifest.xml.bak > $workbenchDir/cache/MiShare/AndroidManifest.xml
+          cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
+          java -jar $workbenchDir/apktool.jar b -f $workbenchDir/cache/MiShare -o $workbenchDir/cache/MiShare.apk
+
+          # https://github.com/LSPosed/LSPatch
+          # 通过 Lspatch 导入 Xposed 模块
+          java -jar ./workbench/lspatch.jar -v $workbenchDir/cache/MiShare.apk -m $workbenchDir/app/build/outputs/apk/release/app-release.apk -o $workbenchDir/cache/lspatch
+          lspatchApk=`readlink -f $workbenchDir/cache/lspatch/*.apk`
+
+          # 更新 Magisk 模块
+          git clone https://github.com/iamr0s/MiShare-Magisk-Module.git $workbenchDir/cache/MiShare-Magisk-Module
+
+          rm -rf $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
+
+          cp $lspatchApk $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
+
+          cd $workbenchDir/cache/MiShare-Magisk-Module
+
+          git config --global user.email actions@github.com
+          git config --global user.name actions@github
+          git add .
+          git commit -m "make a new MiShare.apk by actions@github"
+
+          echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
+
+      - name: Get Build Info
+        id: get_build_info
+        env:
+          EVENT_TYPE: ${{ github.event_name }}
+        run: |
+          echo "::set-output name=prerelease::$(if [[ "${EVENT_TYPE}" != "workflow_dispatch" ]]; then echo true; else echo false; fi)"
+          echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+          echo "::set-output name=version_code::$(grep "versionCode" buildData/version.properties|cut -d'=' -f2)"
+          echo "::set-output name=version_name::$(grep "versionName" buildData/version.properties|cut -d'=' -f2)"
+
+      - name: Push Changes To MiShare-Magisk-Module
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          directory: ${{ steps.make_module.outputs.module_path }}
+          repository: iamr0s/MiShare-Magisk-Module
+
+      - name: Create A New Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_build_info.outputs.version_name }}-${{ steps.get_build_info.outputs.sha }}-${{ github.run_id }}
+          release_name: ${{ steps.get_build_info.outputs.version_name }}-${{ steps.get_build_info.outputs.sha }}-${{ github.run_id }}
+          body: |
+            ${{ steps.get_build_info.outputs.version_name }}-${{ steps.get_build_info.outputs.sha }}-${{ github.run_id }}
+          draft: false
+          prerelease: ${{ steps.get_build_info.outputs.prerelease }}
+
+      - name: Upload Debug To Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_debug.outputs.package_path }}
+          asset_name: XposedMiShare-debug.apk
+          asset_content_type: application/zip
+
+      - name: Upload Release To Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ steps.build_release.outputs.package_path }}
+          asset_name: XposedMiShare-release.apk
+          asset_content_type: application/zip

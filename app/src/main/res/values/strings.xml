@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">米传增强</string>
+    <string name="xposed_description">@string/app_name</string>
+    <array name="xposed_scope">
+        <item>com.miui.mishare.connectivity</item>
+    </array>
+
+    <string name="dialog_device_name_edit_title">设备名称</string>
+    <string name="dialog_device_name_edit_positive">确认</string>
+    <string name="dialog_device_name_edit_negative">取消</string>
+</resources>
