@@ -52,6 +52,8 @@ jobs:
 
       - name: Make Magisk Module
         id: make_module
+        env:
+          XPOSEDMODULE_PATH: ${{ steps.build_release.outputs.package_path }}
         run: |
           rootDir=`readlink -f ./`
           workbenchDir=$rootDir/workbench
@@ -69,7 +71,7 @@ jobs:
 
           # https://github.com/LSPosed/LSPatch
           # 通过 Lspatch 导入 Xposed 模块
-          java -jar ./workbench/lspatch.jar -v $workbenchDir/cache/MiShare.apk -m $workbenchDir/app/build/outputs/apk/release/app-release.apk -o $workbenchDir/cache/lspatch
+          java -jar ./workbench/lspatch.jar -v $workbenchDir/cache/MiShare.apk -m $XPOSEDMODULE_PATH -o $workbenchDir/cache/lspatch
           lspatchApk=`readlink -f $workbenchDir/cache/lspatch/*.apk`
 
           # 更新 Magisk 模块
