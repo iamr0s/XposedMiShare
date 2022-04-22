@@ -116,7 +116,7 @@ jobs:
           tag_name: ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.short_sha }}
           release_name: ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.short_sha }}
           body: |
-            ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.sha }}
+            ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.short_sha }}
           draft: false
           prerelease: false
 
