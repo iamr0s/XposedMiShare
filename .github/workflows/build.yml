@@ -118,7 +118,7 @@ jobs:
           body: |
             ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.short_sha }}
           draft: false
-          prerelease: false
+          prerelease: true
 
       - name: Upload Debug To Release Asset
         uses: actions/upload-release-asset@v1
