@@ -59,9 +59,6 @@ class DeviceNameEdit(lpparam: XC_LoadPackage.LoadPackageParam) : Hook(lpparam) {
                         .setNegativeButton("取消") { _, _ ->
                             true
                         }
-                        .create().apply {
-                            window?.setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG)
-                        }
                         .show()
                     param.result = null
                 }

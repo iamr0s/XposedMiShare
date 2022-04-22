@@ -91,12 +91,12 @@ jobs:
           echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
 
       - name: Get Build Info
-        id: get_build_info
+        id: workflows_info
         env:
           EVENT_TYPE: ${{ github.event_name }}
         run: |
-          echo "::set-output name=prerelease::$(if [[ "${EVENT_TYPE}" != "workflow_dispatch" ]]; then echo true; else echo false; fi)"
-          echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+          echo "::set-output name=sha::$(git rev-parse HEAD)"
+          echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
           echo "::set-output name=version_code::$(grep "versionCode" buildData/version.properties|cut -d'=' -f2)"
           echo "::set-output name=version_name::$(grep "versionName" buildData/version.properties|cut -d'=' -f2)"
 
@@ -113,12 +113,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         with:
-          tag_name: ${{ steps.get_build_info.outputs.version_name }}-${{ steps.get_build_info.outputs.sha }}-${{ github.run_id }}
-          release_name: ${{ steps.get_build_info.outputs.version_name }}-${{ steps.get_build_info.outputs.sha }}-${{ github.run_id }}
+          tag_name: ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.sha }}
+          release_name: ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.sha }}
           body: |
-            ${{ steps.get_build_info.outputs.version_name }}-${{ steps.get_build_info.outputs.sha }}-${{ github.run_id }}
+            ${{ steps.workflows_info.outputs.version_name }}-${{ github.run_id }}-${{ steps.workflows_info.outputs.sha }}
           draft: false
-          prerelease: ${{ steps.get_build_info.outputs.prerelease }}
+          prerelease: false
 
       - name: Upload Debug To Release Asset
         uses: actions/upload-release-asset@v1

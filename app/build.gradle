@@ -84,9 +84,6 @@ dependencies {
     // MiShare SDK
     // compileOnly files('libs/com.miui.mishare.connectivity-11008.jar')
 
-    // ManifestEditor
-//    compileOnly project(':ManifestEditor')
-
     // MiLink SDK
     compileOnly files("libs/milink-sdk-11008.jar")
 
