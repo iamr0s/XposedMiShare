@@ -139,3 +139,6 @@ jobs:
           asset_path: ${{ steps.build_release.outputs.package_path }}
           asset_name: XposedMiShare-release.apk
           asset_content_type: application/zip
+
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master

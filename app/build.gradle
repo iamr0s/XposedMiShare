@@ -82,10 +82,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:+'
 
     // MiShare SDK
-     compileOnly files('libs/com.miui.mishare.connectivity-11008.jar')
-
-    // MiLink SDK
-//    compileOnly files("libs/milink-sdk-11008.jar")
+    compileOnly files("libs/mishare-11008.jar")
 
     // XposedBridge
     compileOnly 'de.robv.android.xposed:api:+'
