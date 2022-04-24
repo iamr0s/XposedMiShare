@@ -81,9 +81,6 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:+'
     androidTestImplementation 'androidx.test.espresso:espresso-core:+'
 
-    // MiShare SDK
-    compileOnly files("libs/mishare-11008.jar")
-
     // XposedBridge
     compileOnly 'de.robv.android.xposed:api:+'
 
