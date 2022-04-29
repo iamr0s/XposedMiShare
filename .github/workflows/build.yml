@@ -79,30 +79,39 @@ jobs:
           python $workbenchDir/set-manifest.py $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml
 
           cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
-          java -jar $workbenchDir/apktool.jar b -f $workbenchDir/cache/MiShare -o $workbenchDir/cache/MiShare.apk
+          java -jar $workbenchDir/apktool.jar b -f $workbenchDir/cache/MiShare -o $workbenchDir/cache/MiShare_apktool.apk
 
           # https://github.com/LSPosed/LSPatch
           # 通过 Lspatch 导入 Xposed 模块
-          java -jar $workbenchDir/lspatch.jar -v $workbenchDir/cache/MiShare.apk -m $XPOSEDMODULE_PATH -o $workbenchDir/cache/lspatch
+          java -jar $workbenchDir/lspatch.jar -v $workbenchDir/cache/MiShare_apktool.apk -m $XPOSEDMODULE_PATH -o $workbenchDir/cache/lspatch
           lspatchApk=`readlink -f $workbenchDir/cache/lspatch/*.apk`
 
+          cp $lspatchApk $workbenchDir/cache/MiShare_lspatch.apk
 
+          # 必须对齐两次，详情参考
+          # https://stackoverflow.com/questions/38047358/zipalign-verification-failed-resources-arsc-bad-1
+          sudo apt install zipalign
+          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch.apk $workbenchDir/cache/MiShare_lspatch_1.apk
+          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_1.apk $workbenchDir/cache/MiShare_lspatch_2.apk
 
-          # # 更新 Magisk 模块
-          # git clone https://github.com/iamr0s/MiShare-Magisk-Module.git $workbenchDir/cache/MiShare-Magisk-Module
+          # 签名
+          java -jar $workbenchDir/apksigner.jar sign --ks $workbenchDir/debug.keystore --ks-key-alias AndroidDebugKey --ks-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --v4-signing-enabled true --out $workbenchDir/cache/MiShare_sign.apk $workbenchDir/cache/MiShare_lspatch_2.apk
 
-          # rm -rf $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
+          # 更新 Magisk 模块
+          git clone https://github.com/iamr0s/MiShare-Magisk-Module.git $workbenchDir/cache/MiShare-Magisk-Module
 
-          # cp $lspatchApk $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
+          rm -rf $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
 
-          # cd $workbenchDir/cache/MiShare-Magisk-Module
+          cp $workbenchDir/cache/MiShare_sign.apk $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
 
-          # git config --global user.email actions@github.com
-          # git config --global user.name actions@github
-          # git add .
-          # git commit -m "make a new MiShare.apk by actions@github"
+          cd $workbenchDir/cache/MiShare-Magisk-Module
 
-          # echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
+          git config --global user.email actions@github.com
+          git config --global user.name actions@github
+          git add .
+          git commit -m "make a new MiShare.apk by actions@github"
+
+          echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
 
       - name: Setup Debug Session
         uses: csexton/debugger-action@master
