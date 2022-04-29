@@ -56,8 +56,6 @@ if __name__ == '__main__':
             categoryNode.setAttribute(
                 'android:name', 'android.intent.category.LAUNCHER')
 
-            print(categoryNode.toprettyxml())
-
             intentFilterNode = dom.createElement('intent-filter')
             intentFilterNode.appendChild(actionNode)
             intentFilterNode.appendChild(categoryNode)
