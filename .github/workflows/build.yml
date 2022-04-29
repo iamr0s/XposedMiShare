@@ -75,6 +75,7 @@ jobs:
           java -jar $workbenchDir/apktool.jar d -f $workbenchDir/MiShare.apk -o $workbenchDir/cache/MiShare
 
           # 适配 https://github.com/reiryuki/Miui-Core-Magisk-Module
+          echo 'running set-manifest.xml'
           python $workbenchDir/set-manifest.py $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml
 
           cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
@@ -151,5 +152,5 @@ jobs:
           asset_name: XposedMiShare-release.apk
           asset_content_type: application/zip
 
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
+      # - name: Setup Debug Session
+      #   uses: csexton/debugger-action@master

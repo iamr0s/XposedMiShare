@@ -4,8 +4,6 @@
 import sys
 import xml.dom.minidom
 
-AndroidNS = 'http://schemas.android.com/apk/res/android'
-
 if __name__ == '__main__':
     if len(sys.argv) < 3:
         raise Exception('need input file name and output file name')
@@ -34,32 +32,31 @@ if __name__ == '__main__':
     ]
 
     for usesLibraryNode in applicationNode.getElementsByTagName('uses-library'):
-        if usesLibraryNode.getAttributeNS(
-                AndroidNS, 'name') in UsesLibraryNames:
+        if usesLibraryNode.getAttribute('android:name') in UsesLibraryNames:
             applicationNode.removeChild(usesLibraryNode)
 
     for usesLibraryName in UsesLibraryNames:
         usesLibraryNode = dom.createElement('uses-library')
-        usesLibraryNode.setAttributeNS(AndroidNS, 'name', usesLibraryName)
-        usesLibraryNode.setAttributeNS(AndroidNS, 'required', 'false')
+        usesLibraryNode.setAttribute('android:name', usesLibraryName)
+        usesLibraryNode.setAttribute('android:required', 'false')
         applicationNode.insertBefore(
             usesLibraryNode, applicationNode.firstChild)
 
     # 允许访问所有的activity
 
     for activityNode in applicationNode.getElementsByTagName('activity'):
-        activityNode.setAttributeNS(
-            AndroidNS, 'exported', 'true')
-        if activityNode.getAttributeNS(
-                AndroidNS, 'name') == 'com.miui.mishare.activity.MiShareSettingsActivity':
+        activityNode.setAttribute('android:exported', 'true')
+        if activityNode.getAttribute('android:name') == 'com.miui.mishare.activity.MiShareSettingsActivity':
 
             actionNode = dom.createElement('action')
-            actionNode.setAttributeNS(
-                AndroidNS, 'name', 'android.intent.action.MAIN')
+            actionNode.setAttribute(
+                'android:name', 'android.intent.action.MAIN')
 
             categoryNode = dom.createElement('category')
-            categoryNode.setAttributeNS(
-                AndroidNS, 'name', 'android.intent.category.LAUNCHER')
+            categoryNode.setAttribute(
+                'android:name', 'android.intent.category.LAUNCHER')
+
+            print(categoryNode.toprettyxml())
 
             intentFilterNode = dom.createElement('intent-filter')
             intentFilterNode.appendChild(actionNode)
@@ -68,5 +65,5 @@ if __name__ == '__main__':
             activityNode.appendChild(intentFilterNode)
 
     file = open(outputFileName, "w")
-    file.write(dom.toprettyxml())
+    file.write(dom.toprettyxml(indent=' '))
     file.close()
