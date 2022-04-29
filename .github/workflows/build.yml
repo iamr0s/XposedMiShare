@@ -10,7 +10,7 @@ name: Gradle Build
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
 
 jobs:
@@ -64,8 +64,10 @@ jobs:
           java -jar $workbenchDir/apktool.jar d -f $workbenchDir/MiShare.apk -o $workbenchDir/cache/MiShare
 
           # 适配 https://github.com/reiryuki/Miui-Core-Magisk-Module
+          cat $workbenchDir/cache/MiShare/AndroidManifest.xml
           mv $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml.bak
           sed -r 's/(<application.*?>)/\1\n<uses-library android:name="com.miui.system" android:required="false" \/>\n<uses-library android:name="com.miui.core" android:required="false" \/>\n<uses-library android:name="com.miui.rom" android:required="false" \/>\n<uses-library android:name="miuiframework" android:required="false" \/>\n/g' $workbenchDir/cache/MiShare/AndroidManifest.xml.bak > $workbenchDir/cache/MiShare/AndroidManifest.xml
+
           cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
           java -jar $workbenchDir/apktool.jar b -f $workbenchDir/cache/MiShare -o $workbenchDir/cache/MiShare.apk
 
