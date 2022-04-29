@@ -83,24 +83,29 @@ jobs:
 
           # https://github.com/LSPosed/LSPatch
           # 通过 Lspatch 导入 Xposed 模块
-          java -jar $workbenchDir/lspatch.jar -v $workbenchDir/cache/MiShare.apk --keystore $workbenchDir/debug.keystore android AndroidDebugKey android -o $workbenchDir/cache/lspatch --v1 true --v2 true --v3 true -m $XPOSEDMODULE_PATH
+          java -jar $workbenchDir/lspatch.jar -v $workbenchDir/cache/MiShare.apk -m $XPOSEDMODULE_PATH -o $workbenchDir/cache/lspatch
           lspatchApk=`readlink -f $workbenchDir/cache/lspatch/*.apk`
 
-          # 更新 Magisk 模块
-          git clone https://github.com/iamr0s/MiShare-Magisk-Module.git $workbenchDir/cache/MiShare-Magisk-Module
 
-          rm -rf $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
 
-          cp $lspatchApk $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
+          # # 更新 Magisk 模块
+          # git clone https://github.com/iamr0s/MiShare-Magisk-Module.git $workbenchDir/cache/MiShare-Magisk-Module
 
-          cd $workbenchDir/cache/MiShare-Magisk-Module
+          # rm -rf $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
 
-          git config --global user.email actions@github.com
-          git config --global user.name actions@github
-          git add .
-          git commit -m "make a new MiShare.apk by actions@github"
+          # cp $lspatchApk $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
 
-          echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
+          # cd $workbenchDir/cache/MiShare-Magisk-Module
+
+          # git config --global user.email actions@github.com
+          # git config --global user.name actions@github
+          # git add .
+          # git commit -m "make a new MiShare.apk by actions@github"
+
+          # echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
+
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
 
       - name: Get Build Info
         id: workflows_info
