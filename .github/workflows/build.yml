@@ -91,8 +91,8 @@ jobs:
           # 必须对齐两次，详情参考
           # https://stackoverflow.com/questions/38047358/zipalign-verification-failed-resources-arsc-bad-1
           sudo apt install zipalign
-          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch.apk $workbenchDir/cache/MiShare_lspatch_1.apk || true
-          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_1.apk $workbenchDir/cache/MiShare_lspatch_2.apk || true
+          (zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch.apk $workbenchDir/cache/MiShare_lspatch_1.apk || true) | echo 'first zipalign'
+          (zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_1.apk $workbenchDir/cache/MiShare_lspatch_2.apk || true) | echo 'second zipalign'
           zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_2.apk $workbenchDir/cache/MiShare_lspatch_3.apk
 
           # 签名
