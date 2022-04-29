@@ -91,8 +91,8 @@ jobs:
           # 必须对齐两次，详情参考
           # https://stackoverflow.com/questions/38047358/zipalign-verification-failed-resources-arsc-bad-1
           sudo apt install zipalign
-          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch.apk $workbenchDir/cache/MiShare_lspatch_1.apk
-          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_1.apk $workbenchDir/cache/MiShare_lspatch_2.apk
+          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch.apk $workbenchDir/cache/MiShare_lspatch_1.apk || true
+          zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_1.apk $workbenchDir/cache/MiShare_lspatch_2.apk || true
 
           # 签名
           java -jar $workbenchDir/apksigner.jar sign --ks $workbenchDir/debug.keystore --ks-key-alias AndroidDebugKey --ks-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --v4-signing-enabled true --out $workbenchDir/cache/MiShare_sign.apk $workbenchDir/cache/MiShare_lspatch_2.apk
@@ -113,8 +113,8 @@ jobs:
 
           echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
 
-      - name: Setup Debug Session
-        uses: csexton/debugger-action@master
+      # - name: Setup Debug Session
+      #   uses: csexton/debugger-action@master
 
       - name: Get Build Info
         id: workflows_info
