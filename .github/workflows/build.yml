@@ -83,7 +83,7 @@ jobs:
 
           # https://github.com/LSPosed/LSPatch
           # 通过 Lspatch 导入 Xposed 模块
-          java -jar $workbenchDir/lspatch.jar -v $workbenchDir/cache/MiShare.apk -m $XPOSEDMODULE_PATH --keystore $workbenchDir/debug.keystore android AndroidDebugKey android -o $workbenchDir/cache/lspatch --v1 true --v2 true --v3 true
+          java -jar $workbenchDir/lspatch.jar -v $workbenchDir/cache/MiShare.apk --keystore $workbenchDir/debug.keystore android AndroidDebugKey android -o $workbenchDir/cache/lspatch --v1 true --v2 true --v3 true -m $XPOSEDMODULE_PATH
           lspatchApk=`readlink -f $workbenchDir/cache/lspatch/*.apk`
 
           # 更新 Magisk 模块
