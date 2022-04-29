@@ -91,7 +91,8 @@ jobs:
 
           rm -rf $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
 
-          cp $lspatchApk $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk
+          # 签名
+          java -jar ./workbench/apksigner.jar sign --ks ./workbench/debug.keystore --ks-key-alias AndroidDebugKey --ks-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --out $workbenchDir/cache/MiShare-Magisk-Module/module/system/priv-app/MiShare/MiShare.apk $lspatchApk
 
           cd $workbenchDir/cache/MiShare-Magisk-Module
 
