@@ -6,12 +6,10 @@ from tokenize import String
 import xml.dom.minidom
 
 if __name__ == '__main__':
-    # if len(sys.argv) < 3:
-    #     raise Exception('need input file name and output file name')
-    # inputFileName = sys.argv[1]
-    # outputFileName = sys.argv[2]
-    inputFileName = 'D:\\Users\\iamr0s\\Desktops\\AndroidManifest (3).xml'
-    outputFileName = 'D:\\Users\\iamr0s\\Desktops\\AndroidManifest (2).xml'
+    if len(sys.argv) < 3:
+        raise Exception('need input file name and output file name')
+    inputFileName = sys.argv[1]
+    outputFileName = sys.argv[2]
 
     dom = xml.dom.minidom.parse(
         inputFileName)
