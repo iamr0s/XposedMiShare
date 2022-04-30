@@ -8,10 +8,7 @@ import android.widget.Toast
 import com.rosan.data.MiShareData
 import com.rosan.util.log
 import com.rosan.xposed.Hook
-import com.rosan.xposed.hook.mishare.DeviceName
-import com.rosan.xposed.hook.mishare.DeviceNameEdit
-import com.rosan.xposed.hook.mishare.FixWindowAlert
-import com.rosan.xposed.hook.mishare.RequestPermissionSystemAlertWindow
+import com.rosan.xposed.hook.mishare.*
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XC_MethodReplacement
 import de.robv.android.xposed.XposedBridge
@@ -41,6 +38,7 @@ class MiShare(lpparam: XC_LoadPackage.LoadPackageParam) : Hook(lpparam) {
                     DeviceNameEdit(lpparam).start()
                     FixWindowAlert(lpparam).start()
                     RequestPermissionSystemAlertWindow(lpparam).start()
+                    ShareActivity(lpparam).start()
                 }
             }
         )
