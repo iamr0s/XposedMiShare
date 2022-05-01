@@ -21,3 +21,6 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.rosan.xposed.HookInit
+
+-keep class com.miui.mishare.** {*;}
+-keep interface com.miui.mishare.** {*;}
