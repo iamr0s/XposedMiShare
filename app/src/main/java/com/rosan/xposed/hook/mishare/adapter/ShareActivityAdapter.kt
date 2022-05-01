@@ -22,16 +22,7 @@ import com.rosan.util.remoteDeviceIndexOf
 class ShareActivityAdapter : BaseAdapter() {
     class Data(
         val device: RemoteDevice,
-        val status: Status,
-        val total: Int = 0,
-        val current: Int = 0
     ) {
-        enum class Status {
-            Ready,
-            SEND_FAILED,
-            SENDING,
-            SEND_SUCCESS,
-        }
     }
 
     private val datas = arrayListOf<Data>()
@@ -40,7 +31,7 @@ class ShareActivityAdapter : BaseAdapter() {
 
     fun set(device: RemoteDevice) {
         synchronized(datas) {
-            set(Data(device, Data.Status.Ready))
+            set(Data(device))
         }
     }
 
@@ -108,14 +99,7 @@ class ShareActivityAdapter : BaseAdapter() {
             FrameLayout.LayoutParams.MATCH_PARENT,
             FrameLayout.LayoutParams.MATCH_PARENT
         )
-        /*when (data.status) {
-            Data.Status.SENDING -> itemView.background = ColorDrawable(0xFF4DD0E1.toInt()).apply {
-                alpha = data.current / data.total
-            }
-            Data.Status.SEND_SUCCESS -> itemView.setBackgroundColor(0xFF81C784.toInt())
-            Data.Status.SEND_FAILED -> itemView.setBackgroundColor(0xFFE57373.toInt())
-            else -> itemView.setBackgroundColor(0x00000000)
-        }*/
+        itemView.setBackgroundColor(0x00000000)
 
         val mainView = LinearLayout(context)
         mainView.orientation = LinearLayout.HORIZONTAL
@@ -125,9 +109,7 @@ class ShareActivityAdapter : BaseAdapter() {
         )
         mainView.background = defaultRipple()
         mainView.setOnClickListener {
-//            if (data.status != Data.Status.SENDING) {
             onItemClickListener(parent, itemView, position, getItemId(position))
-//            }
         }
         itemView.addView(mainView)
 

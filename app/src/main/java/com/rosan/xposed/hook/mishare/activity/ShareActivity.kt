@@ -36,41 +36,16 @@ class ShareActivity(var activity: Activity) {
                     clipData = ClipData.newUri(activity.contentResolver, "", activity.intent.data)
                 }
                 if (clipData == null) {
-                    set(
-                        ShareActivityAdapter.Data(
-                            data.device,
-                            ShareActivityAdapter.Data.Status.SEND_FAILED
-                        )
-                    )
                     return
                 }
                 miShareUtil?.send(data.device, clipData, object : MiShareUtil.OnSendListener {
                     override fun onSend(total: Int, current: Int) {
-                        set(
-                            ShareActivityAdapter.Data(
-                                data.device,
-                                ShareActivityAdapter.Data.Status.SENDING,
-                                total, current
-                            )
-                        )
                     }
 
                     override fun onSuccess() {
-                        set(
-                            ShareActivityAdapter.Data(
-                                data.device,
-                                ShareActivityAdapter.Data.Status.SEND_SUCCESS
-                            )
-                        )
                     }
 
                     override fun onFailed() {
-                        set(
-                            ShareActivityAdapter.Data(
-                                data.device,
-                                ShareActivityAdapter.Data.Status.SEND_FAILED
-                            )
-                        )
                     }
                 })
             }
