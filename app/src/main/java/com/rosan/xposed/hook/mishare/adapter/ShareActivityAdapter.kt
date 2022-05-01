@@ -125,9 +125,9 @@ class ShareActivityAdapter : BaseAdapter() {
         )
         mainView.background = defaultRipple()
         mainView.setOnClickListener {
-            if (data.status != Data.Status.SENDING) {
-                onItemClickListener(parent, itemView, position, getItemId(position))
-            }
+//            if (data.status != Data.Status.SENDING) {
+            onItemClickListener(parent, itemView, position, getItemId(position))
+//            }
         }
         itemView.addView(mainView)
 
