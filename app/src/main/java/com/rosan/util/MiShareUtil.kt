@@ -101,10 +101,6 @@ class MiShareUtil(
                 if (context == null) return
                 if (intent == null) return
                 if ("com.miui.mishare.connectivity.TASK_STATE" != intent.action) return
-                /*log("------------")
-                intent.extras?.keySet().forEach {
-                    log("$it -> (${intent.extras?.get(it)?.javaClass}) -> ${intent.extras?.get(it)}")
-                }*/
                 val id = intent.getStringExtra("device_id")
                 if (taskId != id) return
                 val state = intent.getIntExtra("state", -1)

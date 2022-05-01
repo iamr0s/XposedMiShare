@@ -138,6 +138,7 @@ class ShareActivity(var activity: Activity) {
             override fun onSuccess(miShareUtil: MiShareUtil) {
                 this@ShareActivity.miShareUtil = miShareUtil
                 setEmptyTitle("正在搜索附近的设备...", 0xFF000000.toInt())
+                activity.runOnUiThread { adapter.clear() }
                 miShareUtil.discover(object : IMiShareDiscoverCallback.Stub() {
                     override fun onDeviceLost(deviceId: String?) {
                         if (deviceId == null) return

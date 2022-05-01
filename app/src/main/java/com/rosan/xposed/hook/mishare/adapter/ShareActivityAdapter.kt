@@ -59,6 +59,13 @@ class ShareActivityAdapter : BaseAdapter() {
         }
     }
 
+    fun clear() {
+        synchronized(datas) {
+            datas.clear()
+            notifyDataSetChanged()
+        }
+    }
+
     override fun notifyDataSetChanged() {
         synchronized(datas) {
             datas.sortBy {
