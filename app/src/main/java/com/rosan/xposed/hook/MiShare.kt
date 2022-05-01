@@ -1,20 +1,13 @@
 package com.rosan.xposed.hook
 
-import android.app.Activity
 import android.app.Application
-import android.app.Instrumentation
 import android.content.Context
-import android.widget.Toast
 import com.rosan.data.MiShareData
-import com.rosan.util.log
 import com.rosan.xposed.Hook
 import com.rosan.xposed.hook.mishare.*
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XC_MethodReplacement
-import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import kotlin.math.log
 
 class MiShare(lpparam: XC_LoadPackage.LoadPackageParam) : Hook(lpparam) {
     companion object {
@@ -38,7 +31,7 @@ class MiShare(lpparam: XC_LoadPackage.LoadPackageParam) : Hook(lpparam) {
                     DeviceNameEdit(lpparam).start()
                     FixWindowAlert(lpparam).start()
                     RequestPermissionSystemAlertWindow(lpparam).start()
-                    ShareActivity(lpparam).start()
+                    SendFile(lpparam).start()
                 }
             }
         )
