@@ -87,7 +87,5 @@ dependencies {
     // 权限请求框架：https://github.com/getActivity/XXPermissions
     implementation 'com.github.getActivity:XXPermissions:13.5'
 
-//    implementation files('libs/gallery-mishare-11008.jar')
-    implementation files('libs/mishare-11011.jar')
-//    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
