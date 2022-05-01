@@ -137,6 +137,7 @@ class MiShareUtil(
         task.count = clipData.itemCount
         task.device = device
         intent.putExtra("task", task)
+        intent.setExtrasClassLoader(task::class.java.classLoader)
         context.startService(
             intent
         )
