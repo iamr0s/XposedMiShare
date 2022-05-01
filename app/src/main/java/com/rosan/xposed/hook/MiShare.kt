@@ -28,13 +28,13 @@ class MiShare(lpparam: XC_LoadPackage.LoadPackageParam) : Hook(lpparam) {
             object : XC_MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam?) {
                     val context = param?.args?.getOrNull(0) as Context? ?: return
-//                    MiShareData.init(context)
-//                    DeviceName(lpparam).start()
-//                    DeviceNameEdit(lpparam).start()
-//                    FixWindowAlert(lpparam).start()
-//                    RequestPermissionSystemAlertWindow(lpparam).start()
-//                    SendFile(lpparam).start()
-                    XposedHelpers.findAndHookMethod(
+                    MiShareData.init(context)
+                    DeviceName(lpparam).start()
+                    DeviceNameEdit(lpparam).start()
+                    FixWindowAlert(lpparam).start()
+                    RequestPermissionSystemAlertWindow(lpparam).start()
+                    SendFile(lpparam).start()
+                    /*XposedHelpers.findAndHookMethod(
                         getClass("com.miui.mishare.connectivity.MiShareService"),
                         "onStartCommand",
                         Intent::class.java,
@@ -50,7 +50,7 @@ class MiShare(lpparam: XC_LoadPackage.LoadPackageParam) : Hook(lpparam) {
                                 }
 //                                val task = intent.getParcelableExtra("task") as Any? ?: return
                             }
-                        })
+                        })*/
                 }
             }
         )

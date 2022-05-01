@@ -7,15 +7,9 @@ import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.Log
-import android.widget.AbsListView
-import android.widget.GridView
-import com.miui.mishare.*
-import com.miui.mishare.app.connect.MiShareGalleryConnectivity
 import com.rosan.xposed.Hook
 import com.rosan.xposed.hook.mishare.activity.ShareActivity
-import com.rosan.xposed.hook.mishare.adapter.ShareActivityAdapter
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
