@@ -76,6 +76,7 @@ jobs:
 
           # 适配 https://github.com/reiryuki/Miui-Core-Magisk-Module
           echo 'running set-manifest.xml'
+          ls $workbenchDir/cache/MiShare/
           python $workbenchDir/set-manifest.py $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml
 
           cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
