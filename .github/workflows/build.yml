@@ -72,11 +72,10 @@ jobs:
           mkdir $workbenchDir/cache
 
           # 反编译
-          java -jar $workbenchDir/apktool.jar d -r -s -f $workbenchDir/MiShare.apk -o $workbenchDir/cache/MiShare
+          java -jar $workbenchDir/apktool.jar d -s -f $workbenchDir/MiShare.apk -o $workbenchDir/cache/MiShare
 
           # 适配 https://github.com/reiryuki/Miui-Core-Magisk-Module
           echo 'running set-manifest.xml'
-          ls $workbenchDir/cache/MiShare/
           python $workbenchDir/set-manifest.py $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml
 
           cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
