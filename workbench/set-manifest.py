@@ -23,9 +23,6 @@ if __name__ == '__main__':
 
     applicationNode = applicationNodes[0]
 
-    for queriesNode in applicationNode.getElementsByTagName('queries'):
-        applicationNode.removeChild(queriesNode)
-
     # 期待Miui-Core提供支持
 
     UsesLibraryNames = [
