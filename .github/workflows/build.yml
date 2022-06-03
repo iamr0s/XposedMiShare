@@ -38,6 +38,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: "7.5-rc-1"
 
       - name: Clone Keystore Module
         env:
