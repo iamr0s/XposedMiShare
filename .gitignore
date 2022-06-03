@@ -1,7 +1,5 @@
 *.iml
 .gradle
-.idea
-.vscode
 /local.properties
 .DS_Store
 /build
