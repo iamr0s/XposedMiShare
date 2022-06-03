@@ -16,12 +16,12 @@ if (keystorePropsFile.exists()) {
 }
 
 android {
-    compileSdk 32
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.rosan.xposed.mishare"
         minSdk 26
-        targetSdk 32
+        targetSdk 31
         versionCode Integer.parseInt(versionProps['versionCode'])
         versionName versionProps['versionName']
 
