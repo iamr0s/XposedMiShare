@@ -76,7 +76,6 @@ android {
 dependencies {
     implementation 'androidx.core:core-ktx:+'
     implementation 'androidx.appcompat:appcompat:+'
-    implementation 'com.google.android.material:material:+'
     testImplementation 'junit:junit:+'
     androidTestImplementation 'androidx.test.ext:junit:+'
     androidTestImplementation 'androidx.test.espresso:espresso-core:+'
