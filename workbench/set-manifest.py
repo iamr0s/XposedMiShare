@@ -17,6 +17,9 @@ if __name__ == '__main__':
     if rootNode.nodeName != 'manifest':
         raise Exception('not android xml')
 
+    for queriesNode in rootNode.getElementsByTagName('queries'):
+        rootNode.removeChild(queriesNode)
+
     applicationNodes = rootNode.getElementsByTagName('application')
     if len(applicationNodes) != 1:
         raise Exception('not android xml')
