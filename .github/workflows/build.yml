@@ -97,7 +97,7 @@ jobs:
           zipalign -p -f -v 4 $workbenchDir/cache/MiShare_lspatch_2.apk $workbenchDir/cache/MiShare_lspatch_3.apk
 
           # 签名
-          java -jar $workbenchDir/apksigner.jar sign --ks $workbenchDir/debug.keystore --ks-key-alias AndroidDebugKey --ks-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --v4-signing-enabled true --out $workbenchDir/cache/MiShare_sign.apk $workbenchDir/cache/MiShare_lspatch_3.apk
+          java -jar $workbenchDir/apksigner.jar sign --ks $workbenchDir/debug.keystore --ks-key-alias AndroidDebugKey --ks-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --v4-signing-enabled true --min-sdk-version 26 --out $workbenchDir/cache/MiShare_sign.apk $workbenchDir/cache/MiShare_lspatch_3.apk
 
           # 更新 Magisk 模块
           git clone https://github.com/iamr0s/MiShare-Magisk-Module.git $workbenchDir/cache/MiShare-Magisk-Module
