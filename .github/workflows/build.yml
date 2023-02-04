@@ -79,7 +79,7 @@ jobs:
           python $workbenchDir/set-manifest.py $workbenchDir/cache/MiShare/AndroidManifest.xml $workbenchDir/cache/MiShare/AndroidManifest.xml
           cat $workbenchDir/cache/MiShare/AndroidManifest.xml
 
-          cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
+          # cp -r $workbenchDir/MiShare/* $workbenchDir/cache/MiShare
           java -jar $workbenchDir/apktool.jar b -f $workbenchDir/cache/MiShare -o $workbenchDir/cache/MiShare_apktool.apk
 
           # https://github.com/LSPosed/LSPatch
