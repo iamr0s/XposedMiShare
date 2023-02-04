@@ -53,13 +53,13 @@ jobs:
         id: build_debug
         run: |
           ./gradlew assembleDebug --stacktrace
-          echo "::set-output name=package_path::$(readlink -f app/build/outputs/apk/debug/app-debug.apk)"
+          echo "{package_path}={$(readlink -f app/build/outputs/apk/debug/app-debug.apk)}" >> $GITHUB_OUTPUT
 
       - name: Build Release Apk(s)
         id: build_release
         run: |
           ./gradlew assembleRelease --stacktrace
-          echo "::set-output name=package_path::$(readlink -f app/build/outputs/apk/release/app-release.apk)"
+          echo "{package_path}={$(readlink -f app/build/outputs/apk/release/app-release.apk)}" >> $GITHUB_OUTPUT
 
       - name: Make Magisk Module
         id: make_module
@@ -113,7 +113,7 @@ jobs:
           git add .
           git commit -m "make a new MiShare.apk by actions@github"
 
-          echo "::set-output name=module_path::$(echo $workbenchDir/cache/MiShare-Magisk-Module)"
+          echo "{module_path}={$(echo $workbenchDir/cache/MiShare-Magisk-Module)}" >> $GITHUB_OUTPUT
 
       # - name: Setup Debug Session
       #   uses: csexton/debugger-action@master
@@ -123,10 +123,10 @@ jobs:
         env:
           EVENT_TYPE: ${{ github.event_name }}
         run: |
-          echo "::set-output name=sha::$(git rev-parse HEAD)"
-          echo "::set-output name=short_sha::$(git rev-parse --short HEAD)"
-          echo "::set-output name=version_code::$(grep "versionCode" buildData/version.properties|cut -d'=' -f2)"
-          echo "::set-output name=version_name::$(grep "versionName" buildData/version.properties|cut -d'=' -f2)"
+          echo "{sha}={$(git rev-parse HEAD)}" >> $GITHUB_OUTPUT
+          echo "{short_sha}={$(git rev-parse --short HEAD)}" >> $GITHUB_OUTPUT
+          echo "{version_code}={$(grep "versionCode" buildData/version.properties|cut -d'=' -f2)}" >> $GITHUB_OUTPUT
+          echo "{version_name}={$(grep "versionName" buildData/version.properties|cut -d'=' -f2)}" >> $GITHUB_OUTPUT
 
       - name: Push Changes To MiShare-Magisk-Module
         uses: ad-m/github-push-action@master
