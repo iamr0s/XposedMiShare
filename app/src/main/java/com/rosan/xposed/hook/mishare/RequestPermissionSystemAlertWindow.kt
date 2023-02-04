@@ -1,17 +1,11 @@
 package com.rosan.xposed.hook.mishare
 
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import android.widget.Toast
-import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
 import com.rosan.xposed.Hook
-import com.rosan.xposed.hook.MiShare
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -30,30 +24,40 @@ class RequestPermissionSystemAlertWindow(lpparam: XC_LoadPackage.LoadPackagePara
             object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam?) {
                     val activity = param?.thisObject as Activity? ?: return
-                    if (Settings.canDrawOverlays(activity)) return
-                    Toast.makeText(activity, "请先授予悬浮窗权限", Toast.LENGTH_SHORT).show()
+                    val permissions = arrayOf(
+                        Permission.SYSTEM_ALERT_WINDOW,
+                        Permission.READ_EXTERNAL_STORAGE,
+                        Permission.WRITE_EXTERNAL_STORAGE,
+                        Permission.ACCESS_COARSE_LOCATION,
+                        Permission.ACCESS_FINE_LOCATION,
+                        Permission.BLUETOOTH_CONNECT,
+                        Permission.BLUETOOTH_ADVERTISE,
+                        Permission.BLUETOOTH_SCAN
+                    )
+                    if (XXPermissions.isGranted(activity, permissions)) return
+                    Toast.makeText(activity, "请先授予权限", Toast.LENGTH_SHORT).show()
                     XXPermissions.with(activity)
-                        .permission(Permission.SYSTEM_ALERT_WINDOW)
+                        .permission(permissions)
                         .request { permissions, all ->
                             if (all) {
-                                Toast.makeText(activity, "获取悬浮窗权限成功", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity, "获取权限成功", Toast.LENGTH_SHORT).show()
                             } else {
                                 Toast.makeText(
                                     activity,
-                                    "悬浮窗权限获取失败，请手动授权或重新进入应用授权",
+                                    "权限获取失败，请手动授权或重新进入应用授权",
                                     Toast.LENGTH_SHORT
                                 )
                                     .show()
                             }
                         }
-                    /*activity.startActivityForResult(
-                            Intent()
-                                .setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
-                                .setData(Uri.fromParts("package", MiShare.PACKAGE_NAME, null)),
-                            REQUEST_CODE_MANAGE_OVERLAY_PERMISSION
-                        )*/
                 }
             }
         )
+        getClass("miui.os.Build")
+                ?.getField("IS_INTERNATIONAL_BUILD")
+            ?.let {
+                it.isAccessible = true
+                it.set(null, true)
+            }
     }
 }
